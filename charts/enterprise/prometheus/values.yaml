@@ -635,15 +635,11 @@ prometheus:
   ## @param prometheus.additionalScrapeConfigs.internal.jobList A list of Prometheus scrape jobs
   ##
   additionalScrapeConfigs:
-    enabled: false
+    enabled: true
     type: external
     external:
-      ## Name of the secret that Prometheus should use for the additional scrape configuration
-      ##
-      name: ""
-      ## Name of the key inside the secret to be used for the additional scrape configuration.
-      ##
-      key: ""
+      name: additional-scrape-configs
+      key: prometheus-additional.yaml
     internal:
       jobList: []
   ## @param prometheus.additionalScrapeConfigsExternal.enabled Deprecated: Enable additional scrape configs that are managed externally to this chart
