@@ -1,20 +1,16 @@
-{{- $values := .Values }}
-{{- $namespace := ( printf "ix-%s" .Release.Name ) }}
-{{- if or ( not .Values.ingressClass.enabled ) ( and ( .Values.ingressClass.enabled ) ( .Values.ingressClass.isDefaultClass ) ) }}
-{{- $namespace = "default" }}
-{{- end }}
-{{ range $index, $middlewareData := .Values.middlewares.basicAuth }}
----
-{{- $users := list }}
-{{ range $index, $userdata := $middlewareData.users }}
-    {{ $users = append $users ( htpasswd $userdata.username $userdata.password ) }}
-{{ end }}
+{{- range $index, $middlewareData := .Values.middlewares.basicAuth -}}
 
+  {{- $users := list -}}
+  {{- range $index, $userdata := $middlewareData.users -}}
+    {{- $users = append $users (htpasswd $userdata.username $userdata.password) -}}
+  {{- end }}
+
+---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{printf "%v-%v" $middlewareData.name "secret" }}
-  namespace: {{ $namespace }}
+  name: {{ printf "%v-%v" $middlewareData.name "secret" }}
+  namespace: {{ $.Release.Namespace }}
 type: Opaque
 stringData:
   users: |
@@ -23,12 +19,12 @@ stringData:
     {{- end }}
 ---
 # Declaring the user list
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ $middlewareData.name }}
-  namespace: {{ $namespace }}
+  name: {{ ternary (printf "%v-%v" $.Release.Name $middlewareData.name) $middlewareData.name $.Values.ingressClass.enabled }}
+  namespace: {{ $.Release.Namespace }}
 spec:
   basicAuth:
-    secret: {{printf "%v-%v" $middlewareData.name "secret" }}
-{{ end }}
+    secret: {{ printf "%v-%v" $middlewareData.name "secret" }}
+{{- end -}}

@@ -1,16 +1,7 @@
 image:
   repository: tccr.io/truecharts/ispy-agent-dvr
-  tag: 4.4.9.0@sha256:f409332f428a0dff415e05b4c5613d88af248bee2a55c66edfc77c62e9252fa3
+  tag: v5.0.5.0@sha256:ca5e27eb6d8265496bef4a26c0a349db9a36f88587c6931d08a2492ebf404e1a
   pullPolicy: IfNotPresent
-
-securityContext:
-  runAsNonRoot: false
-  readOnlyRootFilesystem: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
-
 service:
   main:
     ports:
@@ -22,7 +13,7 @@ service:
     ports:
       turn:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 3478
         targetPort: 3478
   webrtc:
@@ -30,60 +21,59 @@ service:
     ports:
       webrtc0:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50000
         targetPort: 50000
       webrtc1:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50001
         targetPort: 50001
       webrtc2:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50002
         targetPort: 50002
       webrtc3:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50003
         targetPort: 50003
       webrtc4:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50004
         targetPort: 50004
       webrtc5:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50005
         targetPort: 50005
       webrtc6:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50006
         targetPort: 60005
       webrtc7:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50007
         targetPort: 50007
       webrtc8:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50008
         targetPort: 50008
       webrtc9:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50009
         targetPort: 50009
       webrtc10:
         enabled: true
-        protocol: UDP
+        protocol: udp
         port: 50010
         targetPort: 50010
-
 persistence:
   config:
     enabled: true
@@ -94,6 +84,12 @@ persistence:
   commands:
     enabled: true
     mountPath: "/agent/Commands"
-
 portal:
-  enabled: true
+  open:
+    enabled: true
+securityContext:
+  container:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    runAsUser: 0
+    runAsGroup: 0

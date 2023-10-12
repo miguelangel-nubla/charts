@@ -4,12 +4,14 @@ words:
   - adlist
   - airsonic
   - akadmin
+  - alertmanager
   - aliasgroup
   - allowtransparency
   - apitoken
   - appname
   - appnamehere
   - auditlog
+  - authelia
   - authentik
   - authexample
   - authkey
@@ -22,7 +24,7 @@ words:
   - basicauthexample
   - batnoter
   - bazarr
-  - Blocklists
+  - blocklists
   - blocktype
   - briefkasten
   - bugfixer's
@@ -35,6 +37,7 @@ words:
   - clouddns
   - cloudflared
   - cloudflareddns
+  - codeserver
   - collabora
   - configfile
   - configfiles
@@ -45,8 +48,8 @@ words:
   - csgo
   - cuda
   - daemonset
-  - DASHDOT
-  - DATAPOINTS
+  - dashdot
+  - datapoints
   - datascience
   - dbcreds
   - dbengine
@@ -64,21 +67,22 @@ words:
   - emby
   - entrypoints
   - eptgmk
-  - EXIF
+  - exif
   - fireshare
   - flatnotes
   - flemarr
-  - Flemmarr
+  - flemmarr
   - flushtables
   - forcegc
+  - FOWNER
   - fullname
   - geoip
   - geoipupdate
   - gibibyte
   - gluster
   - goauthentik
-  - Gotify
-  - Groupname
+  - gotify
+  - groupname
   - gunicorn
   - healthcheck
   - healthchecks
@@ -110,7 +114,8 @@ words:
   - kavita
   - keepalive
   - killswitch
-  - Kiwix
+  - kimai
+  - kiwix
   - kjeld
   - kube
   - kubeconfig
@@ -126,6 +131,7 @@ words:
   - letsencrypt
   - lidarr
   - linkwallet
+  - Litestream
   - loadbalancer
   - localcnamerecords
   - localdnsrecords
@@ -147,7 +153,7 @@ words:
   - meshroom
   - metallb
   - microbin
-  - Midarr
+  - midarr
   - middlewares
   - middlewaretcps
   - mikrotik
@@ -155,7 +161,8 @@ words:
   - mimetypes
   - minecraft
   - minio
-  - Misskey
+  - misskey
+  - mkvcleaver
   - modelstore
   - modports
   - mongosh
@@ -171,15 +178,16 @@ words:
   - nitter
   - nobind
   - nocaptcha
+  - nocodb
   - nodeport
   - nodeports
   - nohardlinks
   - noisedash
-  - Nordigen
+  - nordigen
   - notebookbar
-  - ODBC
-  - OIDC
-  - OOKLA
+  - odbc
+  - oidc
+  - ookla
   - organizr
   - ornias
   - ovpn
@@ -206,7 +214,7 @@ words:
   - putregexhere
   - pvcname
   - pvcpath
-  - Pyspark
+  - pyspark
   - qbitmanage
   - quotum
   - radarr
@@ -225,12 +233,12 @@ words:
   - replacementurlhere
   - resolv
   - restreamer
-  - Retrobot
+  - retrobot
   - rtmp
   - rtmps
   - sabnzbd
   - schouten
-  - Scipy
+  - scipy
   - selfsigned
   - sendgrid
   - serpbear
@@ -238,10 +246,12 @@ words:
   - servername
   - serverstransports
   - serviceexpert
+  - SETGID
+  - SETUID
   - sgateway
   - signup
   - smallblock
-  - SNMP
+  - snmp
   - somefile
   - somethingelse
   - sonarr
@@ -254,7 +264,7 @@ words:
   - statefulset
   - staticdhcpleases
   - staticfiles
-  - Statping
+  - statping
   - steamcommunica
   - steammasterser
   - subchart
@@ -270,12 +280,14 @@ words:
   - teamspeak
   - testpassword
   - testuser
+  - thanos
   - themenamehere
   - tlsoptions
   - tlsstores
+  - totp
   - traefik
   - traefikservices
-  - Traggo
+  - traggo
   - trakt
   - truecharts
   - truenas
@@ -283,12 +295,15 @@ words:
   - umami
   - unet
   - unifi
-  - Upstreams
+  - upsnap
+  - upstreams
   - userspace
   - vaapi
   - valheim
+  - varlock
   - vaultwarden
   - vdev
+  - vikunja
   - vm's
   - wakeup
   - watchyourlan
@@ -301,6 +316,6 @@ words:
   - wger
   - whisparr
   - xsystems
-  - Zabbix
+  - zabbix
   - zerotier
   - zwavejs

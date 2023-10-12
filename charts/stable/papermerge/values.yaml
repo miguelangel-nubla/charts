@@ -1,21 +1,14 @@
 image:
   repository: tccr.io/truecharts/papermerge
   pullPolicy: IfNotPresent
-  tag: v2.0.1@sha256:a19f99854b4c945166150b1a29badcb390fadcc9ac6a4f95b90ea37697772dca
+  tag: v2.1.9@sha256:b87fe0209a685badebab23d678ea8c9a5aba799df413c73f3c4ad40ade629574
 
 securityContext:
-  runAsNonRoot: false
-  readOnlyRootFilesystem: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
-
-env:
-  REDIS_URL:
-    secretKeyRef:
-      name: rediscreds
-      key: url
+  container:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    runAsUser: 0
+    runAsGroup: 0
 
 service:
   main:
@@ -23,6 +16,39 @@ service:
       main:
         targetPort: 8000
         port: 10141
+
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          env:
+            PAPERMERGE__MAIN__TIMEZONE: "{{ .Values.TZ }}"
+            DJANGO_SUPERUSER_EMAIL: admin@example.com
+            DJANGO_SUPERUSER_USENAME: admin
+            DJANGO_SUPERUSER_PASSWORD: my_admin_password123
+            PAPERMERGE__MAIN__SECRET_KEY:
+              secretKeyRef:
+                name: papermerge-secrets
+                key: PAPERMERGE__MAIN__SECRET_KEY
+            PAPERMERGE__DATABASE__TYPE: postgres
+            PAPERMERGE__DATABASE__NAME: "{{ .Values.cnpg.main.database }}"
+            PAPERMERGE__DATABASE__USER: "{{ .Values.cnpg.main.user }}"
+            PAPERMERGE__DATABASE__PORT: 5432
+            PAPERMERGE__DATABASE__HOST:
+              secretKeyRef:
+                name: cnpg-main-urls
+                key: host
+            PAPERMERGE__DATABASE__PASSWORD:
+              secretKeyRef:
+                name: cnpg-main-user
+                key: password
+            PAPERMERGE__REDIS__PORT: 6379
+            PAPERMERGE__REDIS__HOST:
+              secretKeyRef:
+                expandObjectName: false
+                name: '{{ printf "%s-%s" .Release.Name "rediscreds" }}'
+                key: plainhost
 
 persistence:
   config:
@@ -33,8 +59,14 @@ persistence:
 
 redis:
   enabled: true
-  existingSecret: "rediscreds"
   redisUsername: papermerge
 
+cnpg:
+  main:
+    enabled: true
+    user: papermerge
+    database: papermerge
+
 portal:
-  enabled: true
+  open:
+    enabled: true

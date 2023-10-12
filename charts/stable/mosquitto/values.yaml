@@ -1,6 +1,6 @@
 image:
   repository: tccr.io/truecharts/eclipse-mosquitto
-  tag: 2.0.15@sha256:6a14213c5ed7df237286345dd358b6cc42a28d4448c65b54e40b86461d1d3052
+  tag: v2.0.18@sha256:47613bd942dabd27d0b5ebc5280b3c3af0df38658e74a392f905a9c3f64e0089
   pullPolicy: IfNotPresent
 
 service:
@@ -16,6 +16,25 @@ service:
         enabled: true
         port: 9001
         targetPort: 9001
+
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          probes:
+            liveness:
+              enabled: true
+              type: tcp
+              port: 1883
+            readiness:
+              enabled: true
+              type: tcp
+              port: 1883
+            startup:
+              enabled: true
+              type: tcp
+              port: 1883
 
 ingress:
   websockets:
@@ -61,13 +80,12 @@ persistence:
     enabled: true
     mountPath: "/mosquitto/configinc"
   mosquitto-config:
-    enabled: "true"
+    enabled: true
     mountPath: "/mosquitto/config/mosquitto.conf"
     subPath: "mosquitto.conf"
-    type: "custom"
-    volumeSpec:
-      configMap:
-        name: '{{ template "tc.common.names.fullname" . }}-config'
+    type: configmap
+    objectName: config
 
 portal:
-  enabled: false
+  open:
+    enabled: false

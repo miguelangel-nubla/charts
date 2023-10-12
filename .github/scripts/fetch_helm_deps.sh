@@ -19,7 +19,20 @@ trains=(
     "stable"
     "incubator"
     "dependency"
+    "operators"
 )
+
+load_gpg_key() {
+echo ""
+echo "⏬ Downloading and Loading TrueCharts pgp Public Key"
+gpg_dir=.cr-gpg
+mkdir -p "$gpg_dir"
+curl --silent https://keybase.io/truecharts/pgp_keys.asc | gpg --dearmor > $gpg_dir/pubring.gpg || echo "❌ Couldn't load  Public Key."
+curl --silent https://cert-manager.io/public-keys/cert-manager-keyring-2021-09-20-1020CF3C033D4F35BAE1C19E1226061C665DF13E.gpg > $gpg_dir/certman.gpg || echo "❌ Couldn't load certman Public Key."
+echo "✅ Public Key loaded successfully..."
+echo ""
+}
+export -f load_gpg_key
 
 download_deps() {
 local train_chart="$1"
@@ -81,21 +94,56 @@ for idx in $(eval echo "{0..$length}"); do
             # Extract url from repo_url. It's under .entries.DEP_NAME.urls. We filter the specific version first (.version)
             dep_url=$(v="$version" n="$name" go-yq '.entries.[env(n)].[] | select (.version == env(v)) | .urls.[0]' "$index_cache/$repo_dir/index.yaml")
 
+            # tmp hotpatch for cert-manager
+            if [[ !  "$dep_url" == "https"* ]]; then
+              dep_url="https://charts.jetstack.io/${dep_url}"
+            fi
+
             echo ""
             echo "⏬ Downloading dependency $name-$version from $dep_url..."
             mkdir -p "$cache_path/$repo_dir"
             wget --quiet "$dep_url" -P "$cache_path/$repo_dir"
+            wget --quiet "$dep_url.prov" -P "$cache_path/$repo_dir" || echo "failed downloading .prov"
+
             if [ ! $? ]; then
                 echo "❌ wget encountered an error..."
-                helm dependency build "$charts_path/$train_chart/Chart.yaml" || helm dependency update "$charts_path/$train_chart/Chart.yaml" || exit 1
+              if [[ "$train_chart" =~ incubator\/.* ]]; then
+                  helm dependency build "$charts_path/$train_chart/Chart.yaml" || \
+                  helm dependency update "$charts_path/$train_chart/Chart.yaml"|| exit 1
+              elif [[ "$name" =~ "cert-manager" ]]; then
+                  helm dependency build "$charts_path/$train_chart/Chart.yaml" --verify --keyring $gpg_dir/certman.gpg || \
+                  helm dependency update "$charts_path/$train_chart/Chart.yaml" --verify --keyring $gpg_dir/certman.gpg || exit 1
+              else
+                  helm dependency build "$charts_path/$train_chart/Chart.yaml" --verify --keyring $gpg_dir/pubring.gpg || \
+                  helm dependency update "$charts_path/$train_chart/Chart.yaml" --verify --keyring $gpg_dir/pubring.gpg || exit 1
+              fi
             fi
 
             if [ -f "$cache_path/$repo_dir/$name-$version.tgz" ]; then
                 echo "✅ Dependency Downloaded!"
+                if [[ "$name" =~ "cert-manager" ]]; then
+                  helm verify $cache_path/$repo_dir/$name-$version.tgz --keyring $gpg_dir/certman.gpg || \
+                  helm verify $cache_path/$repo_dir/$name-$version.tgz --keyring $gpg_dir/certman.gpg || exit 1
+                elif [[ ! "$train_chart" =~ incubator\/.* ]]; then
+                  echo "Validating dependency signature..."
+                  helm verify $cache_path/$repo_dir/$name-$version.tgz --keyring $gpg_dir/pubring.gpg || \
+                  helm verify $cache_path/$repo_dir/$name-$version.tgz --keyring $gpg_dir/pubring.gpg || exit 1
+                else
+                  echo "Skipping dependency signature verification for $train_chart..."
+                fi
             else
                 echo "❌ Failed to download dependency"
                 # Try helm dependency build/update or otherwise fail fast if a dep fails to download...
-                helm dependency build "$charts_path/$train_chart/Chart.yaml" || helm dependency update "$charts_path/$train_chart/Chart.yaml" || exit 1
+              if [[ "$train_chart" =~ incubator\/.* ]]; then
+                  helm dependency build "$charts_path/$train_chart/Chart.yaml" || \
+                  helm dependency update "$charts_path/$train_chart/Chart.yaml"|| exit 1
+              elif [[ "$name" =~ "cert-manager" ]]; then
+                  helm dependency build "$charts_path/$train_chart/Chart.yaml" --verify --keyring $gpg_dir/certman.gpg || \
+                  helm dependency update "$charts_path/$train_chart/Chart.yaml" --verify --keyring $gpg_dir/certman.gpg || exit 1
+              else
+                  helm dependency build "$charts_path/$train_chart/Chart.yaml" --verify --keyring $gpg_dir/pubring.gpg || \
+                  helm dependency update "$charts_path/$train_chart/Chart.yaml" --verify --keyring $gpg_dir/pubring.gpg || exit 1
+              fi
             fi
         fi
         echo ""
@@ -110,12 +158,15 @@ for idx in $(eval echo "{0..$length}"); do
         else
             echo "❌ Failed to copy dependency"
             # Try helm dependency build/update or otherwise fail fast if a dep fails to copy...
-            helm dependency build "$charts_path/$train_chart/Chart.yaml" || helm dependency update "$charts_path/$train_chart/Chart.yaml" || exit 1
+            helm dependency build "$charts_path/$train_chart/Chart.yaml" || \
+            helm dependency update "$charts_path/$train_chart/Chart.yaml" || exit 1
         fi
     fi
 done
 }
 export -f download_deps
+
+load_gpg_key
 
 if [ -z "$1" ]; then
   for train in "${trains[@]}"; do

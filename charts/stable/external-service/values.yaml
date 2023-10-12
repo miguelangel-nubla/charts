@@ -2,21 +2,28 @@
 image:
   repository: tccr.io/truecharts/alpine
   pullPolicy: IfNotPresent
-  tag: latest@sha256:b59737dd7105f1711d838556f4e59d833e6cae19460fd46ac0327c802f1349d7
-
-# Disable Deployment
-controller:
-  enabled: false
+  tag: latest@sha256:17cd77e25d3fa829d168caec4db7bb5b52ceeb935d8ca0d1180de6f615553dc4
 
 service:
   main:
     type: ExternalIP
     externalIP: "1.1.1.1"
+    useSlice: false
     ports:
       main:
-        Type: HTTPS
+        protocol: https
         port: 10003
-        targetPort: 443
+        # Target port is the port of the "external service"
+        # Defaults to "port" if not set
+
+workload:
+  main:
+    enabled: false
+    podSpec:
+      containers:
+        main:
+          env: {}
 
 portal:
-  enabled: true
+  open:
+    enabled: true

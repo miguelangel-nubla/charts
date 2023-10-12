@@ -1,17 +1,15 @@
 {{/* Define the portalHook */}}
 {{- define "traefik.portalhook" -}}
-{{- if .Values.portalhook.enabled }}
-{{- $namespace := ( printf "ix-%s" .Release.Name ) }}
-{{- if or ( not .Values.ingressClass.enabled ) ( and ( .Values.ingressClass.enabled ) ( .Values.ingressClass.isDefaultClass ) ) }}
-{{- $namespace = "default" }}
-{{- end }}
+{{- if .Values.portalhook.enabled -}}
+  {{- $name := "portalhook" -}}
+  {{- if $.Values.ingressClass.enabled -}}
+    {{- $name = printf "portalhook-%v" .Release.Name -}}
+  {{- end }}
 ---
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: portalhook
-  namespace: {{ $namespace }}
+  name: {{ $name }}
 data:
   {{- $ports := dict }}
   {{- range $.Values.service }}

@@ -2,7 +2,7 @@ env: {}
 image:
   pullPolicy: IfNotPresent
   repository: tccr.io/truecharts/farmos
-  tag: latest@sha256:7bb60f66726603e4c1c94d24085cbf4fc3048a6b2b40ff65ab3f03278e54fac4
+  tag: latest@sha256:cdab5883c6a1bd4ea426bf927ff42e08633672eb3d7e5f76186874b6ed1e4fa7
 persistence:
   sitesdirectory:
     enabled: true

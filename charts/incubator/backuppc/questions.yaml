@@ -4,10 +4,90 @@ portals:
 # Include{portalLink}
 questions:
 # Include{global}
-# Include{controller}
-# Include{replicas}
-# Include{replica1}
-# Include{controllerExpertExtraArgs}
+# Include{workload}
+# Include{workloadDeployment}
+
+# Include{replicas1}
+# Include{podSpec}
+# Include{containerMain}
+
+# Include{containerBasic}
+# Include{containerAdvanced}
+
+  - variable: backuppc
+    group: App Configuration
+    label: Backup PC
+    schema:
+      additional_attrs: true
+      type: dict
+      attrs:
+        - variable: smtp
+          label: SMTP Configuration
+          schema:
+            additional_attrs: true
+            type: dict
+            attrs:
+              - variable: auto_from
+                label: Auto From
+                description: Add setting to support sending through Gmail SMTP.
+                schema:
+                  type: boolean
+                  default: false
+              - variable: host
+                label: SMTP Host
+                schema:
+                  type: string
+                  default: ""
+              - variable: port
+                label: SMTP Port
+                schema:
+                  type: int
+                  default: 25
+              - variable: domain
+                label: HELO Domain
+                schema:
+                  type: string
+                  default: ""
+              - variable: maildomain
+                label: Mail Domain From.
+                schema:
+                  type: string
+                  default: ""
+              - variable: auth
+                label: SMTP Authentication
+                schema:
+                  type: string
+                  default: "NONE"
+              - variable: user
+                label: SMTP Username
+                schema:
+                  type: string
+                  default: ""
+              - variable: pass
+                label: SMTP Password
+                schema:
+                  type: string
+                  private: true
+                  default: ""
+              - variable: tls
+                label: TLS
+                description: Use TLS.
+                schema:
+                  type: boolean
+                  default: false
+              - variable: starttls
+                label: StartTLS
+                description:     Start TLS from within session.
+                schema:
+                  type: boolean
+                  default: false
+              - variable: tlscertcheck
+                label: TLS Cert Check
+                description: Check remote certificate.
+                schema:
+                  type: boolean
+                  default: false
+
 # Include{containerConfig}
 # Include{serviceRoot}
         - variable: main
@@ -33,37 +113,36 @@ questions:
                               default: 8000
                               required: true
 # Include{serviceExpertRoot}
-            default: false
 # Include{serviceExpert}
 # Include{serviceList}
 # Include{persistenceRoot}
-        - variable: backuplocation
-          label: "backuplocation Storage"
-          description: "Backup Location"
+        - variable: config
+          label: "App Config Storage"
+          description: "Stores the Application Configuration."
           schema:
             additional_attrs: true
             type: dict
             attrs:
 # Include{persistenceBasic}
-        - variable: configurationfiles
-          label: "configurationfiles Storage"
-          description: "Configuration Files"
-          schema:
-            additional_attrs: true
-            type: dict
-            attrs:
-# Include{persistenceBasic}
-        - variable: homedirectory
-          label: "homedirectory Storage"
-          description: "Home Directory for Backuppc (SSH Keys)"
+        - variable: ssh
+          label: "App SSH Storage"
+          description: "Stores the Application SSH."
           schema:
             additional_attrs: true
             type: dict
             attrs:
 # Include{persistenceBasic}
         - variable: logs
-          label: "logs Storage"
-          description: "Logs"
+          label: "App Logs Storage"
+          description: "Stores the Application Logs."
+          schema:
+            additional_attrs: true
+            type: dict
+            attrs:
+# Include{persistenceBasic}
+        - variable: data
+          label: "App Data Storage"
+          description: "Stores the Application Data."
           schema:
             additional_attrs: true
             type: dict
@@ -80,52 +159,36 @@ questions:
 # Include{ingressDefault}
 # Include{ingressTLS}
 # Include{ingressTraefik}
+# Include{ingressAdvanced}
 # Include{ingressList}
-# Include{security}
-# Include{securityContextAdvancedRoot}
-              - variable: privileged
-                label: "Privileged mode"
+# Include{securityContextRoot}
+
+              - variable: runAsUser
+                label: "runAsUser"
+                description: "The UserID of the user running the application"
                 schema:
-                  type: boolean
-                  default: false
-              - variable: readOnlyRootFilesystem
-                label: "ReadOnly Root Filesystem"
+                  type: int
+                  default: 0
+              - variable: runAsGroup
+                label: "runAsGroup"
+                description: "The groupID this App of the user running the application"
                 schema:
-                  type: boolean
-                  default: false
-              - variable: allowPrivilegeEscalation
-                label: "Allow Privilege Escalation"
+                  type: int
+                  default: 0
+# Include{securityContextContainer}
+# Include{securityContextAdvanced}
+# Include{securityContextPod}
+              - variable: fsGroup
+                label: "fsGroup"
+                description: "The group that should own ALL storage."
                 schema:
-                  type: boolean
-                  default: false
-              - variable: runAsNonRoot
-                label: "runAsNonRoot"
-                schema:
-                  type: boolean
-                  default: false
-# Include{podSecurityContextRoot}
-        - variable: runAsUser
-          label: "runAsUser"
-          description: "The UserID of the user running the application"
-          schema:
-            type: int
-            default: 0
-        - variable: runAsGroup
-          label: "runAsGroup"
-          description: The groupID this App of the user running the application"
-          schema:
-            type: int
-            default: 0
-        - variable: fsGroup
-          label: "fsGroup"
-          description: "The group that should own ALL storage."
-          schema:
-            type: int
-            default: 568
-# Include{podSecurityContextAdvanced}
+                  type: int
+                  default: 568
+
 # Include{resources}
 # Include{advanced}
 # Include{addons}
 # Include{codeserver}
+# Include{netshoot}
 # Include{vpn}
 # Include{documentation}

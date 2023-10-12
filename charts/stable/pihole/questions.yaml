@@ -8,11 +8,18 @@ portals:
     path: "/admin/"
 questions:
 # Include{global}
-# Include{controller}
-# Include{replicas}
-# Include{replica1}
-# Include{controllerExpertExtraArgs}
+# Include{workload}
+# Include{workloadDeployment}
+
+# Include{replicas1}
+# Include{podSpec}
+# Include{containerMain}
+
+
+# Include{containerBasic}
+# Include{containerAdvanced}
 # Include{containerConfig}
+
   - variable: pihole
     group: "App Configuration"
     label: "Pi-Hole Configuration"
@@ -20,25 +27,26 @@ questions:
       additional_attrs: true
       type: dict
       attrs:
-        - variable: WEBPASSWORD
-          label: "WEBPASSWORD"
+        - variable: webPassword
+          label: "Web Password"
           description: "Sets admin password for the GUI"
           schema:
             type: string
             default: ""
             required: true
-        - variable: DNS1
-          label: "DNS1"
-          description: "Sets the first DNS server (use #port suffix for ports)"
+        - variable: dnsServers
+          label: "DNS Servers"
+          description: "Set DNS servers. Max 2. Use #port suffix for ports"
           schema:
-            type: string
-            default: "9.9.9.9"
-        - variable: DNS2
-          label: "DNS2"
-          description: "Sets the second DNS server (use #port suffix for ports), only if DNS1 is entered"
-          schema:
-            type: string
-            default: "149.112.112.112"
+            type: list
+            default: ["9.9.9.9", "149.112.112.112"]
+            items:
+              - variable: dnsEntry
+                label: "DNS Server Entry"
+                schema:
+                  type: string
+                  default: ""
+# Include{podOptions}
 # Include{serviceRoot}
         - variable: main
           label: "Main Service"
@@ -107,7 +115,6 @@ questions:
                               default: 53
                               required: true
 # Include{serviceExpertRoot}
-            default: false
 # Include{serviceExpert}
 # Include{serviceList}
 # Include{persistenceRoot}
@@ -138,52 +145,36 @@ questions:
 # Include{ingressDefault}
 # Include{ingressTLS}
 # Include{ingressTraefik}
+# Include{ingressAdvanced}
 # Include{ingressList}
-# Include{security}
-# Include{securityContextAdvancedRoot}
-              - variable: privileged
-                label: "Privileged mode"
+# Include{securityContextRoot}
+
+              - variable: runAsUser
+                label: "runAsUser"
+                description: "The UserID of the user running the application"
                 schema:
-                  type: boolean
-                  default: false
-              - variable: readOnlyRootFilesystem
-                label: "ReadOnly Root Filesystem"
+                  type: int
+                  default: 0
+              - variable: runAsGroup
+                label: "runAsGroup"
+                description: "The groupID of the user running the application"
                 schema:
-                  type: boolean
-                  default: false
-              - variable: allowPrivilegeEscalation
-                label: "Allow Privilege Escalation"
+                  type: int
+                  default: 0
+# Include{securityContextContainer}
+# Include{securityContextAdvanced}
+# Include{securityContextPod}
+              - variable: fsGroup
+                label: "fsGroup"
+                description: "The group that should own ALL storage."
                 schema:
-                  type: boolean
-                  default: true
-              - variable: runAsNonRoot
-                label: "runAsNonRoot"
-                schema:
-                  type: boolean
-                  default: false
-# Include{podSecurityContextRoot}
-        - variable: runAsUser
-          label: "runAsUser"
-          description: "The UserID of the user running the application"
-          schema:
-            type: int
-            default: 0
-        - variable: runAsGroup
-          label: "runAsGroup"
-          description: "The groupID this App of the user running the application"
-          schema:
-            type: int
-            default: 0
-        - variable: fsGroup
-          label: "fsGroup"
-          description: "The group that should own ALL storage."
-          schema:
-            type: int
-            default: 568
-# Include{podSecurityContextAdvanced}
+                  type: int
+                  default: 568
+
 # Include{resources}
 # Include{advanced}
 # Include{addons}
 # Include{codeserver}
+# Include{netshoot}
 # Include{vpn}
 # Include{documentation}

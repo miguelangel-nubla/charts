@@ -1,20 +1,12 @@
 {{/* Define the secrets */}}
 {{- define "nocodb.secrets" -}}
----
+{{- $secretName := printf "%s-secrets" (include "tc.v1.common.lib.chart.names.fullname" .) }}
 
-apiVersion: v1
-kind: Secret
-type: Opaque
-metadata:
-  name: nocodb-secrets
-{{- $nocodbprevious := lookup "v1" "Secret" .Release.Namespace "nocodb-secrets" }}
-{{- $auth_jwt_token := "" }}
+{{- $auth_jwt_token := randAlphaNum 32 -}}
+{{- with (lookup "v1" "Secret" .Release.Namespace $secretName) -}}
+  {{- $auth_jwt_token = index .data "NC_AUTH_JWT_SECRET" | b64dec -}}
+{{- end }}
+enabled: true
 data:
-  {{- if $nocodbprevious}}
-  NC_AUTH_JWT_SECRET: {{ index $nocodbprevious.data "NC_AUTH_JWT_SECRET" }}
-  {{- else }}
-  {{- $auth_jwt_token := randAlphaNum 32 }}
-  NC_AUTH_JWT_SECRET: {{ $auth_jwt_token | b64enc }}
-  {{- end }}
-
+  NC_AUTH_JWT_SECRET: {{ $auth_jwt_token }}
 {{- end -}}

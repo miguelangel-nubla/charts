@@ -1,44 +1,42 @@
 {{/* Define the web container */}}
 {{- define "immich.web" -}}
-  {{- if hasKey .Values "imageWeb" -}} {{/* For smooth upgrade, Remove later */}}
-    {{- $img := .Values.imageWeb -}}
-    {{- $_ := set .Values "webImage" (dict "repository" $img.repository "tag" $img.tag "pullPolicy" $img.pullPolicy) -}}
-  {{- end }}
-image: {{ .Values.webImage.repository }}:{{ .Values.webImage.tag }}
-imagePullPolicy: {{ .Values.webImage.pullPolicy }}
-securityContext:
-  runAsUser: {{ .Values.podSecurityContext.runAsUser }}
-  runAsGroup: {{ .Values.podSecurityContext.runAsGroup }}
-  readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
-  runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
-command:
-  - /bin/sh
-  - ./entrypoint.sh
-envFrom:
-  - configMapRef:
-      name: '{{ include "tc.common.names.fullname" . }}-common-config'
-readinessProbe:
-  httpGet:
-    path: /
-    port: 3000
-  initialDelaySeconds: {{ .Values.probes.readiness.spec.initialDelaySeconds }}
-  timeoutSeconds: {{ .Values.probes.readiness.spec.timeoutSeconds }}
-  periodSeconds: {{ .Values.probes.readiness.spec.periodSeconds }}
-  failureThreshold: {{ .Values.probes.readiness.spec.failureThreshold }}
-livenessProbe:
-  httpGet:
-    path: /
-    port: 3000
-  initialDelaySeconds: {{ .Values.probes.liveness.spec.initialDelaySeconds }}
-  timeoutSeconds: {{ .Values.probes.liveness.spec.timeoutSeconds }}
-  periodSeconds: {{ .Values.probes.liveness.spec.periodSeconds }}
-  failureThreshold: {{ .Values.probes.liveness.spec.failureThreshold }}
-startupProbe:
-  httpGet:
-    path: /
-    port: 3000
-  initialDelaySeconds: {{ .Values.probes.startup.spec.initialDelaySeconds }}
-  timeoutSeconds: {{ .Values.probes.startup.spec.timeoutSeconds }}
-  periodSeconds: {{ .Values.probes.startup.spec.periodSeconds }}
-  failureThreshold: {{ .Values.probes.startup.spec.failureThreshold }}
+{{- $fname := (include "tc.v1.common.lib.chart.names.fullname" .) -}}
+{{- $serverUrl := printf "http://%v-server:%v/server-info/ping" $fname .Values.service.server.ports.server.port }}
+enabled: true
+type: Deployment
+podSpec:
+  initContainers:
+    wait-server:
+      {{/* Wait for server */}}
+      {{- include "immich.wait" (dict "url" $serverUrl) | nindent 6 }}
+  containers:
+    web:
+      enabled: true
+      primary: true
+      imageSelector: webImage
+      securityContext:
+        capabilities:
+          disableS6Caps: true
+          add:
+            - SETUID
+            - SETGID
+      envFrom:
+        - configMapRef:
+            name: web-config
+      probes:
+        readiness:
+          enabled: true
+          type: http
+          path: /robots.txt
+          port: {{ .Values.service.web.ports.web.port }}
+        liveness:
+          enabled: true
+          type: http
+          path: /robots.txt
+          port: {{ .Values.service.web.ports.web.port }}
+        startup:
+          enabled: true
+          type: http
+          path: /robots.txt
+          port: {{ .Values.service.web.ports.web.port }}
 {{- end -}}

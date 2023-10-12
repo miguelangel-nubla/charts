@@ -1,7 +1,7 @@
 image:
   repository: tccr.io/truecharts/jackett
   pullPolicy: IfNotPresent
-  tag: 0.20.2297@sha256:4de1541011cb56935ba5a8e28a58f6cbcf62a903393dc94581eda0b6e2aa117c
+  tag: v0.21.1011@sha256:2109030d2257d15a15df6ceff4244fa26fefa733e546fe01e63ef3a24ab9e170
 
 securityContext:
   readOnlyRootFilesystem: false
@@ -27,10 +27,6 @@ serviceList:
         enabled: true
         port: 9119
         targetPort: 9119
-
-env:
-  {}
-  # PUID: 1001
 
 persistence:
   config:

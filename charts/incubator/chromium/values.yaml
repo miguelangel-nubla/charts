@@ -6,7 +6,7 @@ env:
 image:
   pullPolicy: IfNotPresent
   repository: tccr.io/truecharts/chromium
-  tag: latest@sha256:1abbb9dc7aa1e9e0d9f88d64e076438c5964d728905d1bc5a9472b3afc0ef2c1
+  tag: latest@sha256:d07b3940c62c575dea345b79a710bd6454da04aa412266e035bea5977cdb2579
 persistence:
   datadir:
     enabled: true

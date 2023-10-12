@@ -1,58 +1,7 @@
 image:
   repository: tccr.io/truecharts/zwavejs-ui
   pullPolicy: IfNotPresent
-  tag: 8.8.5@sha256:fa9941c51a1b2842f1bbc04d06a36234a863804ea4f41d23ed8779b87404a198
-
-securityContext:
-  readOnlyRootFilesystem: false
-
-# env: {}
-#   OZW_NETWORK_KEY:
-
-probes:
-  liveness:
-    enabled: true
-    # custom: true
-    # spec:
-    #   failureThreshold: 5
-    #   httpGet:
-    #     path: /health
-    #     port: http
-    #     httpHeaders:
-    #       - name: Accept
-    #         value: text/plain
-    #   initialDelaySeconds: 30
-    #   periodSeconds: 10
-    #   timeoutSeconds: 10
-  readiness:
-    enabled: true
-    # custom: true
-    # spec:
-    #   failureThreshold: 5
-    #   httpGet:
-    #     path: /health
-    #     port: http
-    #     httpHeaders:
-    #       - name: Accept
-    #         value: text/plain
-    #   initialDelaySeconds: 30
-    #   periodSeconds: 10
-    #   timeoutSeconds: 10
-  startup:
-    enabled: false
-    # custom: true
-    # spec:
-    #   failureThreshold: 5
-    #   httpGet:
-    #     path: /health
-    #     port: http
-    #     httpHeaders:
-    #       - name: Accept
-    #         value: text/plain
-    #   initialDelaySeconds: 30
-    #   periodSeconds: 10
-    #   timeoutSeconds: 10
-
+  tag: v9.1.2@sha256:71387b9e4066df3ba8477be6b92297bfcdd24cbd797c556d3b7d8b0ffcfcccf9
 service:
   main:
     ports:
@@ -66,7 +15,6 @@ service:
         enabled: true
         port: 10046
         targetPort: 3000
-
 persistence:
   config:
     enabled: true
@@ -82,4 +30,56 @@ persistence:
 #           - zwave-controller
 
 portal:
-  enabled: true
+  open:
+    enabled: true
+securityContext:
+  container:
+    readOnlyRootFilesystem: false
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          probes:
+            liveness:
+              enabled: true
+              # custom: true
+              # spec:
+              #   failureThreshold: 5
+              #   httpGet:
+              #     path: /health
+              #     port: http
+              #     httpHeaders:
+              #       - name: Accept
+              #         value: text/plain
+              #   initialDelaySeconds: 30
+              #   periodSeconds: 10
+              #   timeoutSeconds: 10
+            readiness:
+              enabled: true
+              # custom: true
+              # spec:
+              #   failureThreshold: 5
+              #   httpGet:
+              #     path: /health
+              #     port: http
+              #     httpHeaders:
+              #       - name: Accept
+              #         value: text/plain
+              #   initialDelaySeconds: 30
+              #   periodSeconds: 10
+              #   timeoutSeconds: 10
+            startup:
+              enabled: false
+              # custom: true
+              # spec:
+              #   failureThreshold: 5
+              #   httpGet:
+              #     path: /health
+              #     port: http
+              #     httpHeaders:
+              #       - name: Accept
+              #         value: text/plain
+              #   initialDelaySeconds: 30
+              #   periodSeconds: 10
+              #   timeoutSeconds: 10

@@ -1,10 +1,10 @@
 apiVersion: v2
-appVersion: "2.4.8"
+appVersion: "3.5.1"
 dependencies:
   - name: common
     repository: https://library-charts.truecharts.org
-    version: 11.1.2
-description: Container for protonmail bridge to work on the network.
+    version: 14.0.9
+description: ProtonMail IMAP/SMTP Bridge to work on the network.
 home: https://truecharts.org/charts/stable/protonmail-bridge
 icon: https://truecharts.org/img/hotlink-ok/chart-icons/protonmail-bridge.png
 keywords:
@@ -18,9 +18,8 @@ maintainers:
 name: protonmail-bridge
 sources:
   - https://github.com/truecharts/charts/tree/master/charts/stable/protonmail-bridge
-  - https://hub.docker.com/r/shenxn/protonmail-bridge
   - https://github.com/shenxn/protonmail-bridge-docker
-version: 9.0.10
+version: 11.0.4
 annotations:
   truecharts.org/catagories: |
     - media

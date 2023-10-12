@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: "2022.1.0"
+appVersion: "2023.8.1"
 dependencies:
   - name: common
     repository: https://library-charts.truecharts.org
-    version: 11.1.2
+    version: 14.0.9
 deprecated: false
 description: Minecraft Bedrock Dedicated Server
 home: https://truecharts.org/charts/stable/minecraft-bedrock
@@ -18,12 +18,10 @@ maintainers:
 name: minecraft-bedrock
 sources:
   - https://github.com/truecharts/charts/tree/master/charts/stable/minecraft-bedrock
-  - https://hub.docker.com/r/itzg/minecraft-bedrock-server
   - https://github.com/itzg/docker-minecraft-server
 type: application
-version: 3.0.10
+version: 5.0.3
 annotations:
   truecharts.org/catagories: |
     - games
   truecharts.org/SCALE-support: "true"
-  truecharts.org/grade: U

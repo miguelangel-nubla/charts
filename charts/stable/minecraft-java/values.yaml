@@ -1,70 +1,71 @@
 image:
   repository: tccr.io/truecharts/minecraft-java
-  tag: 2023.1.0@sha256:6d68d2efe1d1f947535d6da262a21817b1bc1e127024f03677ebd6b218c57bdf
+  tag: v2023.8.3@sha256:8e5cfbad3f834145641410670f8323a256b5486faeb57d9190151c84b27d59a3
   pullPolicy: Always
-j19Image:
-  repository: tccr.io/truecharts/minecraft-java19
-  tag: latest@sha256:8b9f7a6169c9ee827970779eace6c1681013e919cce13589156106ef1e5b30bc
+j20Image:
+  repository: tccr.io/truecharts/minecraft-java20
+  tag: latest@sha256:52da6b824428fb62e2c693913c94b8b6f7a95df203af895313cf9675e380be92
+  pullPolicy: Always
+j20AlpineImage:
+  repository: tccr.io/truecharts/minecraft-java20-alpine
+  tag: v2023.8.3@sha256:5dc54147180d2fb65068820d3c1e7da54e8d8ab84a3835ec29149c3d37ea55ad
   pullPolicy: Always
 j17j9Image:
   repository: tccr.io/truecharts/minecraft-java17-openj9
-  tag: 2023.1.0@sha256:a8bba5dce3d92c4646c3a9c4c2028161e0ec11b65fa52c240f71fa417ebeec20
+  tag: v2023.8.3@sha256:53f74c56e0d09edacec266da179e9fd60ec392e00552546b58637757561f172c
   pullPolicy: Always
 j17jdkImage:
   repository: tccr.io/truecharts/minecraft-java17-jdk
-  tag: 2023.1.0@sha256:b4553d1f71ab9a2a5fcdb3ad34c80f8ff8d2d26aaba989079d07fe3f0884323a
+  tag: v2023.8.2@sha256:d69de906ed094a980b444469078b4093accfe517cb3d2a676160434415ae759a
   pullPolicy: Always
 j17gceImage:
   repository: tccr.io/truecharts/minecraft-java17-graalvm-ce
-  tag: latest@sha256:33a60248da06c40c6181afa3dd1a588bd07e4550ce2288577fa035fae6b4335e
+  tag: latest@sha256:5d48f9f41c76c13f77a6d6fd6b957f98715d7582d0e2b07fcc6eedd721784695
   pullPolicy: Always
 j17alpineImage:
   repository: tccr.io/truecharts/minecraft-java17-alpine
-  tag: 2023.1.0@sha256:a13dc809a104863ec4974f7ace1e771611806ceb4aa8d88858c6685d24fa83cc
+  tag: v2023.8.2@sha256:3656b2e0c71b48a1c5bd719e822f3ef62fe805b9f33a0bd4cc10602d6e98436c
   pullPolicy: Always
 j11Image:
   repository: tccr.io/truecharts/minecraft-java11
-  tag: latest@sha256:74c172718f2a78f7752414b8b3fb98229895de15634ebfbcd9b77b1d762c1447
+  tag: latest@sha256:1273d872ca87b15377a10ffa4b8c7df1f44ab06563764cd2475df4498786c6f6
   pullPolicy: Always
 j11jdkImage:
   repository: tccr.io/truecharts/minecraft-java11-jdk
-  tag: 2023.1.0@sha256:b7c9c91dd3732396478000e715c11972a133c7676d8074745be0073cd587a692
+  tag: v2023.8.3@sha256:d744d739f59356442d17d8c4682a7f3e361aedbc001a63a8469aeed48703bd0f
   pullPolicy: Always
 j11j9Image:
   repository: tccr.io/truecharts/minecraft-java11-openj9
-  tag: 2023.1.0@sha256:5808303bac04bb2c287f321f1ee6674f7ee93e6ef1fcc45113b25408dcec9747
+  tag: v2023.8.2@sha256:1518df63c00fd4aac9268155c81e7892ae354b5c36da67a6fe5d62c396664394
   pullPolicy: Always
 j8Image:
   repository: tccr.io/truecharts/minecraft-java8
-  tag: latest@sha256:b452f19dd1ad52fe4538cf99a0887bc17415104d67da8cdbcb817c3717ebb11a
+  tag: latest@sha256:c833fc5d90ca8437d96f37e0a7b227dd52d288d66b494617282f4c733880255a
   pullPolicy: Always
 j8gceImage:
   repository: tccr.io/truecharts/minecraft-java8-graalvm-ce
-  tag: latest@sha256:1705933c0632654b24937409517efe9c94175ba38ef148fc140befee6088b0d5
+  tag: latest@sha256:43c3c3e338e09a8344edb2f4ea633319b4e11825eb7c8081658b66834390d22e
   pullPolicy: Always
 j8jdkImage:
   repository: tccr.io/truecharts/minecraft-java8-jdk
-  tag: 2023.1.0@sha256:198e8f0c0adb6b8713a73f1d3769dc59d8b9d398c493f154844fd4f50c993ab4
+  tag: v2023.8.3@sha256:dd99450d39cd38e80c8b5a96bb04f983b122be4b8dfc6ca6979320b3181b8925
   pullPolicy: Always
 j8j9Image:
   repository: tccr.io/truecharts/minecraft-java8-openj9
-  tag: 2023.1.0@sha256:c0d6473a7d23fb5cd6fd4776c4d3346c8266a217ada91362b87029f63e677cb4
+  tag: v2023.8.3@sha256:a1b64e05cd8cb62b85d05b7d5de1d59ed660fedf36b7a7c11b9ba0b46ba2813c
   pullPolicy: Always
-
-imageSelector: image
-
-securityContext:
-  readOnlyRootFilesystem: false
-  runAsNonRoot: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
 
 service:
   main:
+    enabled: true
     ports:
       main:
+        enabled: true
+        protocol: tcp
+        port: 25565
+      query:
+        enabled: true
+        protocol: udp
         port: 25565
   rcon:
     enabled: true
@@ -72,107 +73,116 @@ service:
       rcon:
         enabled: true
         port: 25575
-        targetPort: 25575
 
-probes:
-  liveness:
-    enabled: true
-    custom: true
-    spec:
-      exec:
-        command:
-          - mc-health
-  readiness:
-    enabled: true
-    custom: true
-    spec:
-      exec:
-        command:
-          - mc-health
-  startup:
-    enabled: true
-    custom: true
-    spec:
-      exec:
-        command:
-          - mc-health
-
-secretEnv:
-  RCON_PASSWORD: "secretrconpass"
-
-env:
-  SERVER_PORT: "{{ .Values.service.main.ports.main.port }}"
-  EULA: "TRUE"
-  GUI: "FALSE"
-  OVERRIDE_SERVER_PROPERTIES: true
-  VERSION: "LATEST"
-  TYPE: "VANILLA"
-  DIFFICULTY: easy
-  MAX_PLAYERS: 20
-  MAX_WORLD_SIZE: 10000
-  ALLOW_NETHER: true
-  ANNOUNCE_PLAYER_ACHIEVEMENTS: true
-  ENABLE_COMMAND_BLOCK: false
-  FORCE_GAMEMODE: false
-  GENERATE_STRUCTURES: true
-  HARDCORE: false
-  MAX_BUILD_HEIGHT: 256
-  MAX_TICK_TIME: 60000
-  SPAWN_ANIMALS: true
-  SPAWN_MONSTERS: true
-  SPAWN_NPCS: true
-  VIEW_DISTANCE: 16
-  MODE: survival
-  MOTD: "Welcome to Minecraft on TrueNAS Scale!"
-  PVP: false
-  LEVEL_TYPE: DEFAULT
-  LEVEL: world
-  ONLINE_MODE: true
-  MEMORY: 2048M
-  # CUSTOM_SERVER: ""
-  # QUILT_LOADER_VERSION: ""
-  # QUILT_LAUNCHER: ""
-  # QUILT_LAUNCHER_URL: ""
-  # PUFFERFISH_BUILD: "lastSuccessfulBuild"
-  # FORGEVERSION: ""
-  # FORGE_INSTALLER: ""
-  # FORGE_INSTALLER_URL: ""
-  # FABRIC_LOADER_VERSION: ""
-  # FABRIC_INSTALLER: ""
-  # FABRIC_INSTALLER_URL: ""
-  # SPIGOT_DOWNLOAD_URL: ""
-  # BUILD_FROM_SOURCE: false
-  # BUKKIT_DOWNLOAD_URL: ""
-  # PAPERBUILD: ""
-  # PAPER_DOWNLOAD_URL: ""
-  # PACKWIZ_URL: ""
-  # AIRPLANE_BUILD: "lastSuccessfulBuild"
-  # MAGMA_CHANNEL: "stable"
-  # MOHIST_BUILD: ""
-  # CANYON_BUILD: ""
-  # SPONGEBRANCH: "STABLE"
-  # SPONGEVERSION: ""
-  # LIMBO_BUILD: "LATEST"
-  # LIMBO_SCHEMA_FILENAME: "default.schem"
-  # CRUCIBLE_RELEASE: "latest"
-  # FTB_MODPACK_ID: ""
-  # FTB_MODPACK_VERSION_ID: ""
-  # CF_SERVER_MOD: ""
-  # CF_BASE_DIR: ""
-  # USE_MODPACK_START_SCRIPT: true
-  # FTB_LEGACYJAVAFIXER: false
-  # WHITELIST: ""
-  # OPS: ""
-  # ICON: ""
-  # SEED: ""
-  # GENERATOR_SETTINGS: ""
-  # WORLD: ""
-  # FORCE_REDOWNLOAD: false
-  # USE_FLARE_FLAGS: false
-  # USE_AIKAR_FLAGS: true
-  # USE_SIMD_FLAGS: false
-  # JVM_OPTS: ""
-  # JVM_XX_OPTS: ""
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          imageSelector: image
+          probes:
+            liveness:
+              enabled: true
+              type: exec
+              command:
+                - mc-health
+            readiness:
+              enabled: true
+              type: exec
+              command:
+                - mc-health
+            startup:
+              enabled: true
+              type: exec
+              command:
+                - mc-health
+          env:
+            SERVER_PORT: "{{ .Values.service.main.ports.main.port }}"
+            QUERY_PORT: "{{ .Values.service.main.ports.query.port }}"
+            RCON_PORT: "{{ .Values.service.rcon.ports.rcon.port }}"
+            ENABLE_QUERY: "true"
+            EULA: "TRUE"
+            GUI: "FALSE"
+            OVERRIDE_SERVER_PROPERTIES: true
+            VERSION: "LATEST"
+            TYPE: "VANILLA"
+            DIFFICULTY: easy
+            MAX_PLAYERS: 20
+            MAX_WORLD_SIZE: 10000
+            ALLOW_NETHER: true
+            ANNOUNCE_PLAYER_ACHIEVEMENTS: true
+            ENABLE_COMMAND_BLOCK: false
+            FORCE_GAMEMODE: false
+            GENERATE_STRUCTURES: true
+            HARDCORE: false
+            MAX_BUILD_HEIGHT: 256
+            MAX_TICK_TIME: 60000
+            SPAWN_ANIMALS: true
+            SPAWN_MONSTERS: true
+            SPAWN_NPCS: true
+            VIEW_DISTANCE: 16
+            MODE: survival
+            MOTD: "Welcome to Minecraft on TrueNAS Scale!"
+            PVP: false
+            LEVEL_TYPE: DEFAULT
+            LEVEL: world
+            ONLINE_MODE: true
+            MEMORY: 2048M
+            RCON_PASSWORD: "secretrconpass"
+            # CUSTOM_SERVER: ""
+            # QUILT_LOADER_VERSION: ""
+            # QUILT_LAUNCHER: ""
+            # QUILT_LAUNCHER_URL: ""
+            # PUFFERFISH_BUILD: "lastSuccessfulBuild"
+            # FORGEVERSION: ""
+            # FORGE_INSTALLER: ""
+            # FORGE_INSTALLER_URL: ""
+            # FABRIC_LOADER_VERSION: ""
+            # FABRIC_INSTALLER: ""
+            # FABRIC_INSTALLER_URL: ""
+            # SPIGOT_DOWNLOAD_URL: ""
+            # BUILD_FROM_SOURCE: false
+            # BUKKIT_DOWNLOAD_URL: ""
+            # PAPERBUILD: ""
+            # PAPER_DOWNLOAD_URL: ""
+            # PACKWIZ_URL: ""
+            # AIRPLANE_BUILD: "lastSuccessfulBuild"
+            # MAGMA_CHANNEL: "stable"
+            # MOHIST_BUILD: ""
+            # CANYON_BUILD: ""
+            # SPONGEBRANCH: "STABLE"
+            # SPONGEVERSION: ""
+            # LIMBO_BUILD: "LATEST"
+            # LIMBO_SCHEMA_FILENAME: "default.schem"
+            # CRUCIBLE_RELEASE: "latest"
+            # FTB_MODPACK_ID: ""
+            # FTB_MODPACK_VERSION_ID: ""
+            # CF_SERVER_MOD: ""
+            # CF_BASE_DIR: ""
+            # USE_MODPACK_START_SCRIPT: true
+            # FTB_LEGACYJAVAFIXER: false
+            # WHITELIST: ""
+            # OPS: ""
+            # ICON: ""
+            # SEED: ""
+            # GENERATOR_SETTINGS: ""
+            # WORLD: ""
+            # FORCE_REDOWNLOAD: false
+            # USE_FLARE_FLAGS: false
+            # USE_AIKAR_FLAGS: true
+            # USE_SIMD_FLAGS: false
+            # JVM_OPTS: ""
+            # JVM_XX_OPTS: ""
+            # CF_API_KEY
+            # CF_PAGE_URL
+            # CF_SLUG
+            # CF_EXCLUDE_INCLUDE_FILE
+            # CF_EXCLUDE_MODS
+            # CF_FORCE_INCLUDE_MODS
+            # CF_FORCE_SYNCHRONIZE
+            # CF_OVERRIDES_SKIP_EXISTING
+            # CF_PARALLEL_DOWNLOADS
+            # CF_SET_LEVEL_FROM
 
 persistence:
   data:
@@ -180,4 +190,5 @@ persistence:
     mountPath: "/data"
 
 portal:
-  enabled: false
+  open:
+    enabled: false

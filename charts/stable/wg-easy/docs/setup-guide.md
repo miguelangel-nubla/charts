@@ -5,7 +5,8 @@ This can be applied to other systems but this specific guide is SCALE specific w
 
 ## Requirements
 
-- Domain name (can be free using DuckDNS or any DDNS) that has your current WAN IP, WAN IP not recommended unless you have a static IP
+- Domain name (can be free using DuckDNS or any DDNS) that has your current WAN IP, WAN IP not recommended unless you have a static IP.
+  - **Caution**: The domain you use should not be behind a reverse proxy, such as Cloudflare Proxy (disable the proxy on the subdomain on the Cloudflare dashboard. The default is Proxied (orange cloud), set to DNS only (grey cloud)), as it won't accurately represent your real WAN IP. To address this, consider creating a subdomain dedicated to Wireguard and disabling the reverse proxy for that specific subdomain only.
 - UDP Port 51820 (or whichever port you specify in Step 4 of the chart setup) Open on your firewall with port-forwarding to your TrueNAS box (this is for the Wireguard Tunnel). This will vary based on the router/firewall setup you're using, for example my Mikrotik has a Firewall rule setup
 
   ![wg-easy-firewall-ex1](img/wg-easy-firewall-ex1.png)
@@ -26,9 +27,7 @@ Set them to `1` and `Enabled`
 
 ## Wg-Easy Chart Setup
 
-Step 1-2: Name chart and leave defaults for Step 2
-
-Step 3:
+### Container Configuration
 
 - Change `WG_HOST` _required_ domain name (or WAN IP if you have a Static IP)
 - Change `WG_DEFAULT_ADDRESS` only if it conflicts with other IP addresses on your network
@@ -37,13 +36,21 @@ Step 3:
 
 ![wg-easy-chart-config](img/wg-easy-chart-config.png)
 
-Step 4:
+### Networking and Services
 
 - The default port for the Wireguard UDP service is `51820` and it needs to be accessible outside your network in order for the Wireguard tunnel to work. Therefore if you change this port make sure you change the port on your Firewall as well.
 
 ![wg-easy-networking](img/wg-easy-networking.png)
 
-Steps 5-8: Adjust as necessary but defaults are fine unless using Ingress, where you can refer to our [Quick-Start Guides](https://truecharts.org/docs/manual/SCALE%20Apps/Quick-Start%20Guides/add-ingress) for an overview
+### Security and Permissions
+
+:::warning
+
+Must change the `PUID` to 0 for this chart to work
+
+:::
+
+![WG-easy PUID](img/wg-easy-PUID.png)
 
 > **Recommended** If you're creating multiple users setting up Ingress for the Portal/GUI page is a secure and easy way to download your Wireguard configs or use the handy QR code scanner from your mobile device with the Wireguard app on iOS or Android.
 >

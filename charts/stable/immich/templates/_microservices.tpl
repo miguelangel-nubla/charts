@@ -1,56 +1,42 @@
-{{/* Define the ml container */}}
 {{- define "immich.microservices" -}}
-image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-imagePullPolicy: {{ .Values.image.pullPolicy }}
-securityContext:
-  runAsUser: {{ .Values.podSecurityContext.runAsUser }}
-  runAsGroup: {{ .Values.podSecurityContext.runAsGroup }}
-  readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
-  runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
-command:
-  - /bin/sh
-  - ./start-microservices.sh
-volumeMounts:
-  - name: uploads
-    mountPath: {{ .Values.persistence.uploads.mountPath }}
-envFrom:
-  - secretRef:
-      name: '{{ include "tc.common.names.fullname" . }}-immich-secret'
-  - configMapRef:
-      name: '{{ include "tc.common.names.fullname" . }}-common-config'
-  - configMapRef:
-      name: '{{ include "tc.common.names.fullname" . }}-server-config'
-readinessProbe:
-  exec:
-    command:
-      - /bin/sh
-      - -c
-      - |
-        ps -a | grep -v grep | grep -q microservices || exit 1
-  initialDelaySeconds: {{ .Values.probes.readiness.spec.initialDelaySeconds }}
-  timeoutSeconds: {{ .Values.probes.readiness.spec.timeoutSeconds }}
-  periodSeconds: {{ .Values.probes.readiness.spec.periodSeconds }}
-  failureThreshold: {{ .Values.probes.readiness.spec.failureThreshold }}
-livenessProbe:
-  exec:
-    command:
-      - /bin/sh
-      - -c
-      - |
-        ps -a | grep -v grep | grep -q microservices || exit 1
-  initialDelaySeconds: {{ .Values.probes.liveness.spec.initialDelaySeconds }}
-  timeoutSeconds: {{ .Values.probes.liveness.spec.timeoutSeconds }}
-  periodSeconds: {{ .Values.probes.liveness.spec.periodSeconds }}
-  failureThreshold: {{ .Values.probes.liveness.spec.failureThreshold }}
-startupProbe:
-  exec:
-    command:
-      - /bin/sh
-      - -c
-      - |
-        ps -a | grep -v grep | grep -q microservices || exit 1
-  initialDelaySeconds: {{ .Values.probes.startup.spec.initialDelaySeconds }}
-  timeoutSeconds: {{ .Values.probes.startup.spec.timeoutSeconds }}
-  periodSeconds: {{ .Values.probes.startup.spec.periodSeconds }}
-  failureThreshold: {{ .Values.probes.startup.spec.failureThreshold }}
+{{- $fname := (include "tc.v1.common.lib.chart.names.fullname" .) -}}
+{{- $serverUrl := printf "http://%v-server:%v/server-info/ping" $fname .Values.service.server.ports.server.port }}
+enabled: true
+type: Deployment
+podSpec:
+  initContainers:
+    wait-server:
+      {{/* Wait for server */}}
+      {{- include "immich.wait" (dict "url" $serverUrl) | nindent 6 }}
+  containers:
+    microservices:
+      enabled: true
+      primary: true
+      imageSelector: image
+      args: start-microservices.sh
+      securityContext:
+        capabilities:
+          disableS6Caps: true
+      envFrom:
+        - secretRef:
+            name: secret
+        - secretRef:
+            name: deps-secret
+        - configMapRef:
+            name: common-config
+        - configMapRef:
+            name: micro-config
+      probes:
+        readiness:
+          enabled: true
+          type: tcp
+          port: '{{ .Values.service.microservices.ports.microservices.port }}'
+        liveness:
+          enabled: true
+          type: tcp
+          port: '{{ .Values.service.microservices.ports.microservices.port }}'
+        startup:
+          enabled: true
+          type: tcp
+          port: '{{ .Values.service.microservices.ports.microservices.port }}'
 {{- end -}}

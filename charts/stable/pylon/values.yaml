@@ -1,36 +1,34 @@
 image:
   repository: tccr.io/truecharts/pylon
   pullPolicy: IfNotPresent
-  tag: 2.9.0@sha256:5f55bbbb3c9093a9300de80685f579c2c3fcdeb5291214c3fe073db0ebb0c84a
-
-securityContext:
-  runAsNonRoot: false
-  readOnlyRootFilesystem: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
-
-secretEnv:
-  PYUSER: ""
-  PYPASS: ""
-
-env:
-  GITURL: ""
-
+  tag: v2.10.0@sha256:faa01bcf3fe30e739ccb8a0a6ba074e7c44e24fe6c835d10bd94196086062b47
 service:
   main:
     ports:
       main:
         targetPort: 3131
         port: 3131
-
 persistence:
   code:
     enabled: true
     mountPath: "/code"
   varrun:
     enabled: true
-
 portal:
-  enabled: true
+  open:
+    enabled: true
+securityContext:
+  container:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    runAsUser: 0
+    runAsGroup: 0
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          env:
+            GITURL: ""
+            PYUSER: ""
+            PYPASS: ""

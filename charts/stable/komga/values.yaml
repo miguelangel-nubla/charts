@@ -1,14 +1,31 @@
 image:
   repository: tccr.io/truecharts/komga
-  tag: 0.161.0@sha256:5e68351290afd7fd31ec5bdf50fe521e73944b749f0d2595203132b53c12bacd
+  tag: v1.5.1@sha256:fc4f77bc1b026aee40420d10ef12292de30a1f4aeaca6ab9b93773c489173d4e
   pullPolicy: IfNotPresent
+
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          env:
+            SERVER_PORT: "{{ .Values.service.main.ports.main.port }}"
+          probes:
+            liveness:
+              port: "{{ .Values.service.main.ports.main.port }}"
+              path: /actuator/health
+            readiness:
+              port: "{{ .Values.service.main.ports.main.port }}"
+              path: /actuator/health
+            startup:
+              type: tcp
+              port: "{{ .Values.service.main.ports.main.port }}"
 
 service:
   main:
     ports:
       main:
         port: 10085
-        targetPort: 8080
 
 persistence:
   config:
@@ -19,4 +36,5 @@ persistence:
     mountPath: "/data"
 
 portal:
-  enabled: true
+  open:
+    enabled: true

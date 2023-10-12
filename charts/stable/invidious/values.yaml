@@ -1,15 +1,74 @@
 image:
   repository: tccr.io/truecharts/invidious
   pullPolicy: IfNotPresent
-  tag: latest@sha256:2900b87cc432aec15fbf7fccacdb5844af82d2838dcc31c9eebb23b4b925d8aa
-
-podSecurityContext:
-  runAsGroup: 0
-  runAsUser: 0
+  tag: latest@sha256:906dbba9ee8d8d206879a1cd04b1971260c6f79c0b83f6db8fc6eec38fd1f40e
 
 securityContext:
-  readOnlyRootFilesystem: false
-  runAsNonRoot: false
+  container:
+    readOnlyRootFilesystem: false
+    runAsNonRoot: false
+    runAsGroup: 0
+    runAsUser: 0
+
+service:
+  main:
+    ports:
+      main:
+        port: 10594
+        protocol: http
+
+workload:
+  main:
+    podSpec:
+      initContainers:
+        dbseed:
+          type: install
+          enabled: true
+          imageSelector: postgresClientImage
+          env:
+            POSTGRES_DB:
+              secretKeyRef:
+                name: cnpg-main-urls
+                key: std
+            POSTGRES_USER: "{{ .Values.cnpg.main.user }}"
+            # PG* variables are for the psql client
+            PGPORT: "5432"
+            PGPASSWORD:
+              secretKeyRef:
+                name: cnpg-main-user
+                key: password
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "Starting DB Seed..."
+              mkdir -p invidious && cd invidious
+
+              echo "Fetching seed files..."
+              git init && \
+              git remote add invidious https://github.com/iv-org/invidious.git && \
+              git fetch invidious && \
+              # Fetch config and docker dirs
+              git checkout invidious/master -- docker config
+
+              # Move config into docker dir
+              echo "Preparing directory structure..."
+              mv -fv config docker
+
+              echo "Performing the seed..."
+              cd docker
+              ./init-invidious-db.sh
+      containers:
+        main:
+          probes:
+            liveness:
+              type: http
+            readiness:
+              type: http
+            startup:
+              type: http
+          envFrom:
+            - configMapRef:
+                name: invidious-config
 
 invidious:
   network:
@@ -38,6 +97,7 @@ invidious:
     login_enabled: true
     captcha_enabled: true
     admins: []
+    enable_user_notifications: true
 
   background_jobs:
     channel_threads: 1
@@ -105,32 +165,14 @@ invidious:
       automatic_instance_redirect: false
       extend_desc: false
 
-envFrom:
-  - secretRef:
-      name: '{{ include "tc.common.names.fullname" . }}-invidious-config'
-
-service:
+cnpg:
   main:
-    ports:
-      main:
-        port: 10594
-        protocol: HTTP
-
-probes:
-  liveness:
-    type: HTTP
-  readiness:
-    type: HTTP
-  startup:
-    type: HTTP
-
-postgresql:
-  enabled: true
-  existingSecret: dbcreds
-  postgresqlDatabase: invidious
-  # DB User cannot be changed
-  # hardcoded from upstream
-  postgresqlUsername: kemal
+    enabled: true
+    database: invidious
+    # DB User cannot be changed
+    # hardcoded from upstream
+    user: kemal
 
 portal:
-  enabled: true
+  open:
+    enabled: true

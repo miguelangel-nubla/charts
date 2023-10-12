@@ -1,29 +1,14 @@
 image:
   repository: tccr.io/truecharts/makemkv
-  tag: 23.02.2@sha256:decbd15310bddd15eb884ff7082e371f66ff8d5943a0a8f2e9e5feba0160daf5
+  tag: v23.09.1@sha256:23e71ee7afdf67cac5b2c3faf10224dd458b925f50d89ec2f6af60181467acb8
   pullPolicy: IfNotPresent
-
-securityContext:
-  readOnlyRootFilesystem: false
-  runAsNonRoot: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
-
-secretEnv:
-  VNC_PASSWORD: ""
-
-envFrom:
-  - configMapRef:
-      name: '{{ include "tc.common.names.fullname" . }}-makemkv'
-
 makemkv:
   # General Settings
   KEEP_APP_RUNNING: false
   # GUI Settings
   DISPLAY_WIDTH: 1280
   DISPLAY_HEIGHT: 768
+  DARK_MODE: false
   # App Settings
   MAKEMKV_KEY: "BETA"
   AUTO_DISC_RIPPER_INTERVAL: 5
@@ -36,7 +21,6 @@ makemkv:
   AUTO_DISC_RIPPER_PARALLEL_RIP: false
   AUTO_DISC_RIPPER_NO_GUI_PROGRESS: false
   AUTO_DISC_RIPPER_FORCE_UNIQUE_OUTPUT_DIR: false
-
 service:
   main:
     ports:
@@ -50,7 +34,6 @@ service:
         enabled: true
         port: 10181
         targetPort: 5900
-
 configmap:
   makemkv:
     enabled: true
@@ -60,6 +43,7 @@ configmap:
       SECURE_CONNECTION: '{{ ternary "1" "0" .Values.makemkv.SECURE_CONNECTION }}'
       DISPLAY_WIDTH: "{{ .Values.makemkv.DISPLAY_WIDTH }}"
       DISPLAY_HEIGHT: "{{ .Values.makemkv.DISPLAY_HEIGHT }}"
+      DARK_MODE: '{{ ternary "1" "0" .Values.makemkv.DARK_MODE }}'
       MAKEMKV_KEY: "{{ .Values.makemkv.MAKEMKV_KEY }}"
       AUTO_DISC_RIPPER_INTERVAL: "{{ .Values.makemkv.AUTO_DISC_RIPPER_INTERVAL }}"
       AUTO_DISC_RIPPER_BD_MODE: "{{ .Values.makemkv.AUTO_DISC_RIPPER_BD_MODE }}"
@@ -69,7 +53,6 @@ configmap:
       AUTO_DISC_RIPPER_PARALLEL_RIP: '{{ ternary "1" "0" .Values.makemkv.AUTO_DISC_RIPPER_PARALLEL_RIP }}'
       AUTO_DISC_RIPPER_NO_GUI_PROGRESS: '{{ ternary "1" "0" .Values.makemkv.AUTO_DISC_RIPPER_NO_GUI_PROGRESS }}'
       AUTO_DISC_RIPPER_FORCE_UNIQUE_OUTPUT_DIR: '{{ ternary "1" "0" .Values.makemkv.AUTO_DISC_RIPPER_FORCE_UNIQUE_OUTPUT_DIR }}'
-
 persistence:
   config:
     enabled: true
@@ -80,6 +63,34 @@ persistence:
   output:
     enabled: true
     mountPath: "/output"
-
 portal:
-  enabled: true
+  open:
+    enabled: true
+securityContext:
+  container:
+    readOnlyRootFilesystem: false
+    runAsNonRoot: false
+    runAsUser: 0
+    runAsGroup: 0
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+                - KILL
+          probes:
+            liveness:
+              type: tcp
+            readiness:
+              type: tcp
+            startup:
+              type: tcp
+          env:
+            VNC_PASSWORD: ""
+          envFrom:
+            - configMapRef:
+                name: "makemkv"

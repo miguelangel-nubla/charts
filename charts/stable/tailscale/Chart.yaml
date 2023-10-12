@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: "1.36.1"
+appVersion: "1.50.1"
 dependencies:
   - name: common
     repository: https://library-charts.truecharts.org
-    version: 11.1.2
+    version: 14.0.9
 description: Tailscale lets you connect your devices and users together in your own secure virtual private network
 home: https://truecharts.org/charts/stable/tailscale
 icon: https://truecharts.org/img/hotlink-ok/chart-icons/tailscale.png
@@ -18,11 +18,9 @@ maintainers:
 name: tailscale
 sources:
   - https://github.com/truecharts/charts/tree/master/charts/stable/tailscale
-  - https://hub.docker.com/r/tailscale/tailscale
   - https://github.com/tailscale/tailscale/blob/main/docs/k8s/run.sh
-version: 3.0.16
+version: 5.0.8
 annotations:
   truecharts.org/catagories: |
     - network
   truecharts.org/SCALE-support: "true"
-  truecharts.org/grade: U

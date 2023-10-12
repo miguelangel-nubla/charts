@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: "4.9.1"
+appVersion: "4.17.1"
 dependencies:
   - name: common
     repository: https://library-charts.truecharts.org
-    version: 11.1.2
+    version: 14.0.9
 description: Run VS Code on any machine anywhere and access it in the browser.
 home: https://truecharts.org/charts/stable/code-server
 icon: https://truecharts.org/img/hotlink-ok/chart-icons/code-server.png
@@ -20,12 +20,10 @@ maintainers:
 name: code-server
 sources:
   - https://github.com/truecharts/charts/tree/master/charts/stable/code-server
-  - https://hub.docker.com/r/codercom/code-server
   - https://github.com/cdr/code-server
 type: application
-version: 6.0.10
+version: 8.0.5
 annotations:
   truecharts.org/catagories: |
     - media
   truecharts.org/SCALE-support: "true"
-  truecharts.org/grade: U

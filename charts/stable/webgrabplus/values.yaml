@@ -1,23 +1,13 @@
 image:
   repository: tccr.io/truecharts/webgrabplus
   pullPolicy: IfNotPresent
-  tag: 5.0.1@sha256:950597f7d0280b5d5ed1f67889e0ec9dca4d72f1a5929b4590035e956afe1951
-
-securityContext:
-  runAsNonRoot: false
-  readOnlyRootFilesystem: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
-
+  tag: v5.1.3@sha256:b28c7d030a409c00e6e70f7cbbf6d6694fe7341b1e8a4fcfbf5007f18beb4af8
 service:
   main:
     enabled: false
     ports:
       main:
         enabled: false
-
 persistence:
   varrun:
     enabled: true
@@ -27,6 +17,24 @@ persistence:
   data:
     enabled: true
     mountPath: "/data"
-
 portal:
-  enabled: false
+  open:
+    enabled: false
+securityContext:
+  container:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    runAsUser: 0
+    runAsGroup: 0
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          probes:
+            liveness:
+              enabled: false
+            readiness:
+              enabled: false
+            startup:
+              enabled: false

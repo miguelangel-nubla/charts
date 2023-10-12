@@ -1,15 +1,14 @@
 image:
   repository: tccr.io/truecharts/emulatorjs
   pullPolicy: IfNotPresent
-  tag: v1.7.2@sha256:1149966e6bdacb209b6c4a6be8a4b341320c95d7b02c1603c0f21a16d91f33ec
+  tag: v1.7.2@sha256:1c5b58b1572d0cd31d524b471494f9786df5c1ffd6f7618c14b3799fbddda234
 
 securityContext:
-  runAsNonRoot: false
-  readOnlyRootFilesystem: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
+  container:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    runAsUser: 0
+    runAsGroup: 0
 
 service:
   main:
@@ -36,15 +35,31 @@ ingress:
   front:
     autoLink: true
 
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          probes:
+            liveness:
+              type: http
+              path: /
+            readiness:
+              type: http
+              path: /
+            startup:
+              type: http
+              path: /
+          env: {}
+
 persistence:
   config:
     enabled: true
-    mountPath: "/config"
+    mountPath: /config
   data:
     enabled: true
-    mountPath: "/data"
-  varrun:
-    enabled: true
+    mountPath: /data
 
 portal:
-  enabled: true
+  open:
+    enabled: true

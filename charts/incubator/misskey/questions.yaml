@@ -4,10 +4,15 @@ portals:
 # Include{portalLink}
 questions:
 # Include{global}
-# Include{controller}
-# Include{replicas}
-# Include{replica1}
-# Include{controllerExpertExtraArgs}
+# Include{workload}
+# Include{workloadDeployment}
+
+# Include{replicas1}
+# Include{podSpec}
+# Include{containerMain}
+# Include{containerBasic}
+# Include{containerAdvanced}
+
   - variable: misskey
     group: App Configuration
     label: Misskey Configuration
@@ -78,6 +83,13 @@ questions:
                   type: int
                   required: true
                   default: 16
+              - variable: relashionshipJobConcurrency
+                label: Relashionship Job Concurrency
+                description: Relashionship job concurrency per worker
+                schema:
+                  type: int
+                  required: true
+                  default: 16
               - variable: deliverJobPerSec
                 label: Deliver Jobs Per Second
                 description: Job rate limiter
@@ -92,6 +104,13 @@ questions:
                   type: int
                   required: true
                   default: 16
+              - variable: relashionshipJobPerSec
+                label: Relashionship Jobs Per Second
+                description: Relashionship job rate limiter
+                schema:
+                  type: int
+                  required: true
+                  default: 64
               - variable: deliverJobMaxAttempts
                 label: Max Deliver Job Attempts
                 schema:
@@ -113,6 +132,23 @@ questions:
                   items:
                     - variable: privateNet
                       label: Private Network Entry
+                      schema:
+                        type: string
+                        required: true
+                        default: ""
+              - variable: proxyBypassHosts
+                label: Proxy Bypass Hosts
+                schema:
+                  type: list
+                  default:
+                    - api.deepl.com
+                    - api-free.deepl.com
+                    - www.recaptcha.net
+                    - hcaptcha.com
+                    - challenges.cloudflare.com
+                  items:
+                    - variable: proxyBypassHostEntry
+                      label: Proxy Bypass Host Entry
                       schema:
                         type: string
                         required: true
@@ -142,7 +178,6 @@ questions:
                               default: 3003
                               required: true
 # Include{serviceExpertRoot}
-            default: false
 # Include{serviceExpert}
 # Include{serviceList}
 # Include{persistenceRoot}
@@ -165,52 +200,35 @@ questions:
 # Include{ingressDefault}
 # Include{ingressTLS}
 # Include{ingressTraefik}
+# Include{ingressAdvanced}
 # Include{ingressList}
-# Include{security}
-# Include{securityContextAdvancedRoot}
-              - variable: privileged
-                label: Privileged mode
-                schema:
-                  type: boolean
-                  default: false
-              - variable: readOnlyRootFilesystem
-                label: ReadOnly Root Filesystem
-                schema:
-                  type: boolean
-                  default: false
-              - variable: allowPrivilegeEscalation
-                label: Allow Privilege Escalation
-                schema:
-                  type: boolean
-                  default: false
-              - variable: runAsNonRoot
-                label: runAsNonRoot
-                schema:
-                  type: boolean
-                  default: false
 # Include{podSecurityContextRoot}
-        - variable: runAsUser
-          label: runAsUser
-          description: The UserID of the user running the application
-          schema:
-            type: int
-            default: 0
-        - variable: runAsGroup
-          label: runAsGroup
-          description: The groupID this App of the user running the application
-          schema:
-            type: int
-            default: 0
+              - variable: runAsUser
+                label: runAsUser
+                description: The UserID of the user running the application
+                schema:
+                  type: int
+                  default: 0
+              - variable: runAsGroup
+                label: runAsGroup
+                description: The groupID this App of the user running the application
+                schema:
+                  type: int
+                  default: 0
+# Include{securityContextContainer}
+# Include{securityContextAdvanced}
+# Include{securityContextPod}
         - variable: fsGroup
           label: fsGroup
           description: The group that should own ALL storage.
           schema:
             type: int
             default: 33
-# Include{podSecurityContextAdvanced}
+
 # Include{resources}
 # Include{advanced}
 # Include{addons}
 # Include{codeserver}
+# Include{netshoot}
 # Include{vpn}
 # Include{documentation}

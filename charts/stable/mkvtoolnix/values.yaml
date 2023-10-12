@@ -1,16 +1,7 @@
 image:
   repository: tccr.io/truecharts/mkvtoolnix
-  tag: 23.02.4@sha256:9fb9ea15857db245a44acada056d7325767a3ea630cad59b357d9b17598431bf
+  tag: v23.08.1@sha256:bd73dfc2eb8dc6180c43974831e87338c5e97765c140ce55a66c2d74608e8e2d
   pullPolicy: IfNotPresent
-
-securityContext:
-  readOnlyRootFilesystem: false
-  runAsNonRoot: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
-
 service:
   main:
     ports:
@@ -24,21 +15,16 @@ service:
         enabled: true
         port: 10237
         targetPort: 5900
-
-envFrom:
-  - configMapRef:
-      name: '{{ include "tc.common.names.fullname" . }}-mkvtoolnix'
-
-secretEnv:
-  VNC_PASSWORD: ""
-
 mkvtoolnix:
+  # General Settings
   KEEP_APP_RUNNING: false
+  # GUI Settings
   DISPLAY_WIDTH: 1280
   DISPLAY_HEIGHT: 768
+  DARK_MODE: false
+  # App Settings
   SECURE_CONNECTION: false
   ENABLE_CJK_FONT: false
-
 configmap:
   mkvtoolnix:
     enabled: true
@@ -48,7 +34,7 @@ configmap:
       SECURE_CONNECTION: '{{ ternary "1" "0" .Values.mkvtoolnix.SECURE_CONNECTION }}'
       DISPLAY_WIDTH: "{{ .Values.mkvtoolnix.DISPLAY_WIDTH }}"
       DISPLAY_HEIGHT: "{{ .Values.mkvtoolnix.DISPLAY_HEIGHT }}"
-
+      DARK_MODE: '{{ ternary "1" "0" .Values.mkvtoolnix.DARK_MODE }}'
 persistence:
   config:
     enabled: true
@@ -56,6 +42,34 @@ persistence:
   storage:
     enabled: true
     mountPath: "/storage"
-
 portal:
-  enabled: true
+  open:
+    enabled: true
+securityContext:
+  container:
+    readOnlyRootFilesystem: false
+    runAsNonRoot: false
+    runAsUser: 0
+    runAsGroup: 0
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          securityContext:
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+                - KILL
+          probes:
+            liveness:
+              type: tcp
+            readiness:
+              type: tcp
+            startup:
+              type: tcp
+          env:
+            VNC_PASSWORD: ""
+          envFrom:
+            - configMapRef:
+                name: "mkvtoolnix"

@@ -1,15 +1,14 @@
 image:
   repository: tccr.io/truecharts/dillinger
   pullPolicy: IfNotPresent
-  tag: v3.39.1@sha256:e836ddc037ef92919c20aa58b3b668823b60c749b325d0fab41e0da491aed7a9
+  tag: v3.39.1@sha256:d24cb30ac0014207b148102d1461251b9b8ae867f225153a5bf635583d5995e3
 
 securityContext:
-  runAsNonRoot: false
-  readOnlyRootFilesystem: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
+  container:
+    runAsNonRoot: false
+    readOnlyRootFilesystem: false
+    runAsUser: 0
+    runAsGroup: 0
 
 service:
   main:
@@ -18,12 +17,28 @@ service:
         targetPort: 8080
         port: 10143
 
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          probes:
+            liveness:
+              type: http
+              path: /
+            readiness:
+              type: http
+              path: /
+            startup:
+              type: http
+              path: /
+          env: {}
+
 persistence:
   config:
     enabled: true
-    mountPath: "/config"
-  varrun:
-    enabled: true
+    mountPath: /config
 
 portal:
-  enabled: true
+  open:
+    enabled: true

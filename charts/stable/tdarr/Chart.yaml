@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: "2.00.18.2"
+appVersion: "2.00.20.1"
 dependencies:
   - name: common
     repository: https://library-charts.truecharts.org
-    version: 11.1.2
+    version: 14.0.9
 deprecated: false
 description: Audio/Video library transcoding automation
 home: https://truecharts.org/charts/stable/tdarr
@@ -20,12 +20,10 @@ maintainers:
 name: tdarr
 sources:
   - https://github.com/truecharts/charts/tree/master/charts/stable/tdarr
-  - https://hub.docker.com/r/haveagitgat/tdarr
   - https://github.com/HaveAGitGat/Tdarr
 type: application
-version: 4.0.9
+version: 6.0.1
 annotations:
   truecharts.org/catagories: |
     - media
   truecharts.org/SCALE-support: "true"
-  truecharts.org/grade: U

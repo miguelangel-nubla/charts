@@ -2,7 +2,7 @@ env: {}
 image:
   pullPolicy: IfNotPresent
   repository: tccr.io/truecharts/sourcegraph
-  tag: 4.4.2@sha256:600112183db92d095e0ec10b01f87acab6e84124ff1e2f05c9ee2d79326f2bcb
+  tag: 5.0.2@sha256:bb4385280218543a66b629b6e282ddc0f07dbc0dfaa257fa5757060512fa711b
 persistence:
   applicationdatastoragepath:
     enabled: true

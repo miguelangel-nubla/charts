@@ -1,24 +1,26 @@
 image:
   repository: tccr.io/truecharts/cloudflared
   pullPolicy: IfNotPresent
-  tag: 2023.2.1@sha256:aad34c57932b7267ea3f40c5c0dd8d289da0ee6fecd29e93ff48c860390aa980
+  tag: v2023.8.2@sha256:fda01764ea6d58703cf1dbe74617cffd000d3bc8df9e49fb84ba53785b4e9cf4
 
-args:
-  - tunnel
-  - --no-autoupdate
-  - run
-  - --token
-  - "{{ .Values.cloudflared.token }}"
-
-cloudflared:
-  token: ""
-
-securityContext:
-  runAsNonRoot: false
-
-podSecurityContext:
-  runAsUser: 0
-  runAsGroup: 0
+workload:
+  main:
+    podSpec:
+      containers:
+        main:
+          probes:
+            liveness:
+              enabled: false
+            readiness:
+              enabled: false
+            startup:
+              enabled: false
+          args:
+            - tunnel
+            - --no-autoupdate
+            - run
+          env:
+            TUNNEL_TOKEN: ""
 
 service:
   main:
@@ -27,13 +29,6 @@ service:
       main:
         enabled: false
 
-probes:
-  liveness:
-    enabled: false
-  readiness:
-    enabled: false
-  startup:
-    enabled: false
-
 portal:
-  enabled: false
+  open:
+    enabled: false
